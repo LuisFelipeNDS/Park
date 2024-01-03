@@ -1,5 +1,7 @@
 package com.lfn.Service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.lfn.Entity.Usuario;
@@ -24,4 +26,20 @@ public class UsuarioService {
 		return usuarioRepository.save(usuario);
 	}
 
+	@Transactional
+	public Usuario buscarPorId(Long id) {
+		return usuarioRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+	}
+
+	@Transactional
+	public Usuario editarSenha(Long id, String password) {
+		
+		Usuario user = buscarPorId(id);
+		user.setPassword(password);
+		
+		return user;
+	}
+
+	
 }

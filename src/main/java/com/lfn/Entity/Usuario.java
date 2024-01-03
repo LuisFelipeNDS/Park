@@ -38,6 +38,11 @@ public class Usuario implements Serializable{
 	private String criadoPor;
 	@Column(name = "modificado_por")
 	private String modificadoPor;
+	
+	public Usuario() {
+		
+	}
+	
 	public Usuario(Long id, String username, String password, Role role, LocalDateTime dataCriacao,
 			LocalDateTime dataModificacao, String criadoPor, String modificadoPor) {
 		this.id = id;
