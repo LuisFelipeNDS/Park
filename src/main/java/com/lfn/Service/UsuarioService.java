@@ -1,6 +1,6 @@
 package com.lfn.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -39,6 +39,11 @@ public class UsuarioService {
 		user.setPassword(password);
 		
 		return user;
+	}
+
+	@Transactional
+	public List<Usuario> buscarTodos() {
+		return usuarioRepository.findAll();
 	}
 
 	
