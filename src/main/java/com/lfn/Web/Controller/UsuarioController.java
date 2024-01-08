@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lfn.Entity.Usuario;
 import com.lfn.Service.UsuarioService;
 import com.lfn.Web.Dto.UsuarioCreateDto;
+import com.lfn.Web.Dto.UsuarioResponseDto;
 import com.lfn.Web.Dto.Mapper.UsuarioMapper;
 
 @RestController
@@ -31,13 +32,13 @@ public class UsuarioController {
     }
     
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody UsuarioCreateDto createDto){
+    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto createDto){
     	
     	//Tranforma um UsuarioCreateDto em Usuario
     	Usuario userConvertido = UsuarioMapper.toUsuario(createDto);
     	Usuario user = usuarioService.salvar(userConvertido);
     	
-    	return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    	return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }
     
     @GetMapping("/{id}")
