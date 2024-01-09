@@ -16,6 +16,7 @@ import com.lfn.Entity.Usuario;
 import com.lfn.Service.UsuarioService;
 import com.lfn.Web.Dto.UsuarioCreateDto;
 import com.lfn.Web.Dto.UsuarioResponseDto;
+import com.lfn.Web.Dto.UsuarioSenhaDto;
 import com.lfn.Web.Dto.Mapper.UsuarioMapper;
 
 @RestController
@@ -42,26 +43,26 @@ public class UsuarioController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getById(@PathVariable Long id){
+    public ResponseEntity<UsuarioResponseDto> getById(@PathVariable Long id){
     	
     	Usuario user = usuarioService.buscarPorId(id);
     	
-    	return ResponseEntity.ok(user);
+    	return ResponseEntity.ok(UsuarioMapper.toDto(user));
     }
     
     @PatchMapping("/{id}")
-    public ResponseEntity<Usuario> updatePassword(@PathVariable Long id,@RequestBody Usuario usuario){
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id,@RequestBody UsuarioSenhaDto dto){
     	
-    	Usuario user = usuarioService.editarSenha(id, usuario.getPassword());
+    	Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
     	
-    	return ResponseEntity.ok(user);
+    	return ResponseEntity.noContent().build();
     }
     
     @GetMapping
-    public ResponseEntity<List<Usuario>> getAll(){
+    public ResponseEntity<List<UsuarioResponseDto>> getAll(){
     	
     	List<Usuario> users = usuarioService.buscarTodos();
     	
-    	return ResponseEntity.ok(users);
+    	return ResponseEntity.ok(UsuarioMapper.toListDto(users));
     }
 }
