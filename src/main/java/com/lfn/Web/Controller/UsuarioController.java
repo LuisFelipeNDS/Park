@@ -19,6 +19,8 @@ import com.lfn.Web.Dto.UsuarioResponseDto;
 import com.lfn.Web.Dto.UsuarioSenhaDto;
 import com.lfn.Web.Dto.Mapper.UsuarioMapper;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuarioController {
@@ -33,7 +35,7 @@ public class UsuarioController {
     }
     
     @PostMapping
-    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto createDto){
+    public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto createDto){
     	
     	//Tranforma um UsuarioCreateDto em Usuario
     	Usuario userConvertido = UsuarioMapper.toUsuario(createDto);
@@ -51,7 +53,7 @@ public class UsuarioController {
     }
     
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id,@RequestBody UsuarioSenhaDto dto){
+    public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id,@RequestBody UsuarioSenhaDto dto){
     	
     	Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
     	
