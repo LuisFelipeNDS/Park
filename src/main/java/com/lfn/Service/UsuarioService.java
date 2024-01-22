@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.lfn.Entity.Usuario;
+import com.lfn.Exception.UsernameUniqueViolationException;
 import com.lfn.Repository.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -22,8 +23,12 @@ public class UsuarioService {
 
 	@Transactional
 	public Usuario salvar(Usuario usuario) {
-		
+		try {
 		return usuarioRepository.save(usuario);
+		}catch(org.springframework.dao.DataIntegrityViolationException ex) {
+			throw new UsernameUniqueViolationException(
+					String.format("Usuario {%s}ja cadastrado", usuario.getUsername()));
+		}
 	}
 
 	@Transactional
