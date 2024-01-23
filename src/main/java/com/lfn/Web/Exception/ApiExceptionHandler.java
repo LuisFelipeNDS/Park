@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.lfn.Exception.EntityNotFoundException;
 import com.lfn.Exception.UsernameUniqueViolationException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +18,18 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice 
 public class ApiExceptionHandler {
 	
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<ErrorMesage> entityNotFoundException(EntityNotFoundException ex,
+																		HttpServletRequest request){
+		return ResponseEntity
+				.status(HttpStatus.NOT_FOUND)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(new ErrorMesage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+		
+	}
 	@ExceptionHandler(UsernameUniqueViolationException.class)
-	public ResponseEntity<ErrorMesage> usernameUniqueViolationException(RuntimeException ex,
-																		HttpServletRequest request,
-																			 BindingResult result){
+	public ResponseEntity<ErrorMesage> uniqueViolationException(RuntimeException ex,
+			HttpServletRequest request){
 		return ResponseEntity
 				.status(HttpStatus.CONFLICT)
 				.contentType(MediaType.APPLICATION_JSON)

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.lfn.Entity.Usuario;
+import com.lfn.Exception.EntityNotFoundException;
 import com.lfn.Exception.UsernameUniqueViolationException;
 import com.lfn.Repository.UsuarioRepository;
 
@@ -34,7 +35,8 @@ public class UsuarioService {
 	@Transactional
 	public Usuario buscarPorId(Long id) {
 		return usuarioRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
+				.orElseThrow(() -> new EntityNotFoundException
+						(String.format("Usuario de id {%s} nao foi encontrado", id)));
 	}
 
 	@Transactional
