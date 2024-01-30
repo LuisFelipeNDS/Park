@@ -38,7 +38,8 @@ public class UsuarioIT {
 		org.assertj.core.api.Assertions.assertThat(responseBody.getRole()).isEqualTo("CLIENT");
 	}	
 	
-	public void createUser_ComUsernameEPasswordInvalidos_RetornarErrorMessageStatus422() {
+	@Test
+	public void createUser_ComUsernameInvalido_RetornarErrorMessageStatus422() {
 		
 		ErrorMesage  responseBody = testClient
 				.post()
@@ -71,6 +72,49 @@ public class UsuarioIT {
 				.uri("api/v1/usuarios")
 				.contentType(MediaType.APPLICATION_JSON)
 				.bodyValue(new UsuarioCreateDto("tody@email", "123456"))
+				.exchange().expectStatus().isEqualTo(422)
+				.expectBody(ErrorMesage.class)
+				.returnResult().getResponseBody();
+		
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+	}
+	
+	@Test
+	public void createUser_ComPasswordInvalido_RetornarErrorMessageStatus422() {
+		
+		ErrorMesage  responseBody = testClient
+				.post()
+				.uri("api/v1/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UsuarioCreateDto("tody@email.com", ""))
+				.exchange().expectStatus().isEqualTo(422)
+				.expectBody(ErrorMesage.class)
+				.returnResult().getResponseBody();
+		
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+		
+		responseBody = testClient
+				.post()
+				.uri("api/v1/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UsuarioCreateDto("tody@", "12345"))
+				.exchange().expectStatus().isEqualTo(422)
+				.expectBody(ErrorMesage.class)
+				.returnResult().getResponseBody();
+		
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+		
+		responseBody = testClient
+				.post()
+				.uri("api/v1/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UsuarioCreateDto("tody@email", "1234562"))
 				.exchange().expectStatus().isEqualTo(422)
 				.expectBody(ErrorMesage.class)
 				.returnResult().getResponseBody();
