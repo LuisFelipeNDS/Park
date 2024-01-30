@@ -38,7 +38,6 @@ public class UsuarioIT {
 		org.assertj.core.api.Assertions.assertThat(responseBody.getRole()).isEqualTo("CLIENT");
 	}	
 	
-	@Test
 	public void createUser_ComUsernameInvalido_RetornarErrorMessageStatus422() {
 		
 		ErrorMesage  responseBody = testClient
@@ -122,5 +121,23 @@ public class UsuarioIT {
 		
 		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
 		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+	}	
+	
+	@Test
+	public void createUser_ComUsernameRepetido_RetornarErrorMessageStatus409() {
+		
+		ErrorMesage  responseBody = testClient
+				.post()
+				.uri("api/v1/usuarios")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new UsuarioCreateDto("ana@email.com", "123456"))
+				.exchange().expectStatus().isEqualTo(409)
+				.expectBody(ErrorMesage.class)
+				.returnResult().getResponseBody();
+				
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isNotNull();
+		
 	}	
 }
