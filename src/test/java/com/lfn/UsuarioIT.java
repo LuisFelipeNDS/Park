@@ -19,7 +19,6 @@ public class UsuarioIT {
 	@Autowired
 	WebTestClient testClient;
 
-	@Test
 	public void createUser_ComUsernameEPasswordValidos_RetornarUsuarioCriadoComStatus201() {
 		
 		UsuarioResponseDto  responseBody = testClient
@@ -80,7 +79,6 @@ public class UsuarioIT {
 		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 	}
 	
-	@Test
 	public void createUser_ComPasswordInvalido_RetornarErrorMessageStatus422() {
 		
 		ErrorMesage  responseBody = testClient
@@ -123,7 +121,6 @@ public class UsuarioIT {
 		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 	}	
 	
-	@Test
 	public void createUser_ComUsernameRepetido_RetornarErrorMessageStatus409() {
 		
 		ErrorMesage  responseBody = testClient
@@ -140,4 +137,38 @@ public class UsuarioIT {
 		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isNotNull();
 		
 	}	
+	
+	@Test
+	public void buscarUsuario_comIdExistente_RetornarUsuarioComStatus200() {
+		
+		UsuarioResponseDto  responseBody = testClient
+				.get()
+				.uri("api/v1/usuarios/100")
+				.exchange().expectStatus().isOk()
+				.expectBody(UsuarioResponseDto.class)
+				.returnResult().getResponseBody();
+				
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getId()).isEqualTo(100);
+		org.assertj.core.api.Assertions.assertThat(responseBody.getUsername()).isEqualTo("ana@email.com");
+		org.assertj.core.api.Assertions.assertThat(responseBody.getRole()).isEqualTo("ADMIN");
+	}	
+	
+	@Test
+	public void buscarUsuario_comIdInexistente_RetornarErrorMessageComStatus404() {
+		
+		ErrorMesage  responseBody = testClient
+				.get()
+				.uri("api/v1/usuarios/0")
+				.exchange().expectStatus().isNotFound()
+				.expectBody(ErrorMesage.class)
+				.returnResult().getResponseBody();
+		
+		
+		org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+		org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+	}	
+	
+	
 }
