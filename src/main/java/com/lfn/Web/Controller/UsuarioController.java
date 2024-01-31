@@ -79,13 +79,15 @@ public class UsuarioController {
     		,@ApiResponse(responseCode = "404", description = "Recurso nao encontrado", content = @Content(mediaType = "application/json"
     	    , schema = @Schema(implementation = ErrorMesage.class)))
     		,@ApiResponse(responseCode = "400", description = "Senha nao confere", content = @Content(mediaType = "application/json"
-    		, schema = @Schema(implementation = ErrorMesage.class)))})
+    		, schema = @Schema(implementation = ErrorMesage.class)))
+    		,@ApiResponse(responseCode = "422", description = "Campos invalidos ou mal formatado", content = @Content(mediaType = "application/json"
+    		, schema = @Schema(implementation = ErrorMesage.class)))
+    		})
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassword(@Valid @PathVariable Long id,@RequestBody UsuarioSenhaDto dto){
     	
-    	Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
-    	
-    	return ResponseEntity.noContent().build();
+    	 Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
+         return ResponseEntity.noContent().build();
     }
     
     @Operation(summary = "Recuperar todos os usuarios", description = "Recuperar todos os usuarios cadastrados"

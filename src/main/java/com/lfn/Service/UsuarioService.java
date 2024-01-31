@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.lfn.Entity.Usuario;
 import com.lfn.Exception.EntityNotFoundException;
+import com.lfn.Exception.PasswordInvalidException;
 import com.lfn.Exception.UsernameUniqueViolationException;
 import com.lfn.Repository.UsuarioRepository;
 
@@ -41,20 +42,17 @@ public class UsuarioService {
 
 	@Transactional
 	public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
-		
-		if(!novaSenha.equals(confirmaSenha)) {
-			throw new RuntimeException("Sua senha não confere com a confirmacao de senha");
-		}
-		
-		Usuario user = buscarPorId(id);
-		
-		if(!user.getPassword().equals(senhaAtual)) {
-			throw new RuntimeException("Sua senha não confere");
-		}
-		
-		user.setPassword(novaSenha);
-		
-		return user;
+		 if (!novaSenha.equals(confirmaSenha)) {
+	            throw new PasswordInvalidException("Nova senha não confere com confirmação de senha.");
+	        }
+
+	        Usuario user = buscarPorId(id);
+	        if (!user.getPassword().equals(senhaAtual)) {
+	            throw new PasswordInvalidException("Sua senha não confere.");
+	        }
+
+	        user.setPassword(novaSenha);
+	        return user;
 	}
 
 	@Transactional
